@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue的生命周期</title>
+    <style>
+         html,body{
+             width:100%;
+            
+         }
+         .headtop{
+              width:1000px;
+             margin:0 auto;
+         }
+         p{
+             line-height:30px;
+             font-size: 20px;
+         }
+    </style>
+</head>
+<body>
+    <div class="headtop">
+        <h1>Vue的生命周期</h1>
+        <p>每个Vue实例有一个完整的生命周期，也就是从开始创建，初始化数据，编译模块，挂载Dom，渲染-更新-渲染，销毁等一系列过程，就是一个完整的Vue生命周期</p>
+        <p>
+            1.通过new Vue()创建的实例，组件，会初始化事件和生命周期，然后执行<mark>beforeCreate这个钩子函数</mark>，这个时候，数据还没挂载，
+            只是一个空壳，无法访问到数据和真实的DOM，一般不做操作。  
+        </p>
+        <p>
+            2.挂载数据，绑定事件等。然后执行<mark>created</mark>函数，这个时候已经可以使用到数据，也可以更改数据,在这里更改数据不会触发updated函数，在这里可以在渲染前倒数第二次更改数据的机会，不会触发其他的钩子函数，一般可以在这里做初始数据的获取
+            只是一个空壳，无法访问到数据和真实的DOM，一般不做操作。  
+        </p>
+        <p>
+            3.接下来开始找实例或者组件对应的模板，编译模板为虚拟dom放入到render函数中准备渲染，然后执行<mark>beforeMount</mark>钩子函数，在这个函数中虚拟dom已经创建完成，马上就要渲染,在这里也可以更改数据，不会触发updated，在这里可以在渲染前最后一次更改数据的机会，
+            不会触发其他的钩子函数，一般可以在这里做初始数据的获取
+        </p>
+        <p><mark>接下来就开始render，渲染真实的dom</mark></p>
+        <p> 
+	        4.接下来开始render，渲染出真实dom，然后执行<mark>mounted</mark>钩子函数，此时，组件已经出现在页面中，数据、真实dom都已经处理好了,事件都已经挂载好了，可以在这里操作真实dom等事情...
+        </p>
+        <p>
+            5. 当组件或实例的数据更改之后，会立即执行<mark>beforeUpdate</mark>，然后vue的虚拟dom机制会重新构建虚拟dom与上一次的虚拟dom树利用diff算法进行对比之后重新渲染，一般不做什么事儿
+                  
+        </p>
+        <p>
+             6.  当更新完成后，执行<mark>updated</mark>，数据已经更改完成，dom也重新render完成，可以操作更新后的虚拟dom
+               
+        </p>
+        <p>
+             7. 当经过某种途径调用$destroy方法后，立即执行<mark>beforeDestroy</mark>，一般在这里做一些善后工作，例如清除计时器、清除非指令绑定的事件等等
+                 
+        </p>
+        <p>
+            8. 组件的数据绑定、监听...去掉后只剩下dom空壳，这个时候，执行<mark>destroyed</mark>，在这里做善后工作也可以
+        </p>
+        <image src="/image/lifecycle.png" class="life"></image>
+    </div>
+    <div id="app">
+       
+    </div>
+    <template id="aaa">
+        <div>
+            <p class="myp">A组件</p>
+            <button @click="destroy">destroy</button>
+            <input type="text" v-model="msg">
+            <p>msg:{{msg}}</p>
+        </div>
+    </template>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script>
+        //生命周期：初始化阶段 运行中阶段 销魂阶段
+        Vue.component('aaa',{
+            template:'#aaa',
+            data:function(){
+                return {msg:'hello'}
+            },
+            timer:null,
+            methods:{
+                destroy :function(){
+                    this.$destory();
+                }
+            },
+            beforeCreate:function() {
+                console.log('beforecreate:刚刚new Vue()之后，这个时候，数据还没挂载，只是一个空壳');
+                console.log(this.msg);
+                console.log(document.getElementsByClassName('myp')[0])
+            },
+            created:function(){
+                console.log('created:这个时候已经可以使用到数据，也可以更改数据，在这里更改数据不会触发update函数');
+                this.msg += "!!!!!";
+                console.log('在这里可以在渲染前倒数第二次更改数据的机会，不会触发其他的钩子函数，一般可以在这里做初始数据的获取');
+                console.log('接下来开始找实例或组件对应的模板，编译模板为虚拟dom放入到render函数中渲染');
+
+            },
+            beforeMount:function(){
+                console.log('beforeMount:虚拟dom已经创建完成，马上就要渲染，在这里也可以更改数据，不会触发updated');
+                this.msg +="@@@@";
+                console.log('在这里可以在渲染前最后一次更改数据的机会，不会触发其他的钩子函数，一般可以在这里做初始数据的获取');
+                console.log(document.getElementsByClassName('myp')[0])
+                console.log('接下来就开始render，渲染真实的dom')
+            },
+            render:function(){
+
+            },
+            mounted:function(){
+                console.log('mounted:此时，组件已经出现在页面中，数据，真实dom都已经处理好了，事件都已经挂载好了')
+                console.log(document.getElementsByClassName('myp')[0])
+                console.log('可以在这里操作真实DOM的事情')
+            },
+            beforeUpdate:function(){
+                //这里不能更改数据，否则会陷入死循环
+                console.log('beforeUpdate：重新渲染之前触发');
+                console.log('然后vue的虚拟dom机制会重新构建虚拟dom与上一次的虚拟dom树利用diff算法进行对比之后重新渲染')
+            },
+            updated:function(){
+                //这里不能更改数据，否则会陷入死循环
+                console.log('updated:数据已经更改完成，dom也重新render完成')
+            },
+            beforeDestroy:function(){
+                console.log('beforeDestory:销毁前执行（$destory方法被调用的时候就会执行），一般在这里善后，清除计时器，清除非指令绑定的事件等等')
+            },
+            destroyed:function(){
+                console.log('destoryed:组件的数据绑定，监听，，都去掉了，只剩下dom空壳，这里也快以善后')
+            }
+        })
+        new Vue({
+
+        }).$mount('#app');
+    </script>
+</body>
+</html>
