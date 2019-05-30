@@ -1,0 +1,2 @@
+vue_lifecycle:主要用于理解Vue的生命周期
+vsDom:虚拟dom的构建实例

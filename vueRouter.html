@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue-Router的原理</title>
+</head>
+<body>
+    <h1>Vue-router</h1>
+    <a target="_blank" href="https://github.com/vuejs/vue-router">Vue-router源码地址</a>
+    <p>vue-router通过<mark>hash</mark>与<mark>History interface</mark>两种防晒实现前端路由，更新视图但不重新请求页面是前端路由原理的核心之一。
+        <br/>1.利用URL的hash('#')
+        <br/> 2.利用History interface在HTML5中新增的方法
+    </p>
+    <h2>HashHistory</h2>
+    <p>原理：hash("#")符号的本来作用是加在URL中指示网页中的位置</p>
+    <p>hash虽然出现在URL中，但不会被包括在HTTP请求中。它是用来指导浏览器动作的，对服务器端完全无用。</p>
+    
+</body>
+</html>

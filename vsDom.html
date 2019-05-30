@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+         .container{
+             width:600px;
+             height:300px;
+             background-color:blue;
+             margin:auto;
+         }
+         .container1{
+             width:600px;
+             height:300px;
+             background-color:pink;
+             margin:auto;
+         }
+    </style>
+</head>
+<body id="bodyno">
+    
+   <script>
+       (function(global,factory,plug){
+           global[plug] =factory.call(global);
+       })(this,function(tagName,props,children){
+           
+
+        var Element =function(tagName,props,children){
+            this.tagName =tagName;
+            this.props =props ||{};
+            this.children =children ||[];
+            this.key =props ?props.key :undefined;
+            let count =0;
+            this.children.forEach((child)=>{
+               if(child instanceof Element){
+                 count +=child.count;
+               }else{
+                   child =''+child;
+               }
+                count++;
+            });
+           this.count =count;
+        }
+        Element.prototype.render =function(){
+
+            const el =document.createElement(this.tagName);
+
+            const props =this.props;
+
+            // for(let propName in props){
+               
+
+            //     el.className =props[propName];
+            // }
+            for(let [key,value] of Object.entries(props)){
+                console.log(key+'-'+value);
+
+                el.setAttribute(key,value);
+            }
+            this.children.forEach(child =>{
+
+                let childEl =(child instanceof Element) ? child.render():document.createTextNode(child);
+
+                el.appendChild(childEl);
+            })
+                return el;
+        }
+        
+        return Element;
+            
+
+       },'VisElement');
+       
+      
+
+    </script>
+    <script>
+     var child =[
+        //  {
+        //      tagName:'h1',
+        //      props:{style:'color:red'},
+        //      children:['simple virtual dom']
+        //  },
+        new VisElement('h1',{'class':'headtxt'},['simple virtual dom']),
+        new VisElement('ul',{'class':'list'},[
+            new VisElement('li',{'class':'item1'},['#list1']),
+            new VisElement('li',{'class':'item1'},['#list1']),
+            new VisElement('li',{'class':'item1'},['#list1']),
+            new VisElement('li',{'class':'item2'},['#list2'])
+        ])
+         
+        ];
+     var newChild =[
+        new VisElement('h3',{style:'color:red'},['simple virtual dom']),
+        new VisElement('ul',{'class':'list'},[
+            new VisElement('li',{'class':'item1'},['#list1']),
+            new VisElement('li',{'class':'item2'},['#list2']),
+            new VisElement('li',{'class':'item3'},['#list3'])
+        ])
+     ]
+     
+     var oldEle =new VisElement('div',{'class':'container'},child);
+     var newEle =new VisElement('div',{'class':'container1'},newChild);
+     const root =oldEle.render();
+     const root2 =newEle.render();
+     document.getElementById('bodyno').appendChild(root);
+     document.getElementById('bodyno').appendChild(root2);
+     console.log(oldEle);
+     //比较两棵树
+     function diff(oldTree,newTree){
+
+     }
+     function deepTraversal(oldNode,newNode,index,patch){
+         
+     }
+    </script>
+</body>
+</html>
