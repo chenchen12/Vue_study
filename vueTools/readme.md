@@ -1,0 +1,9 @@
+vuetools:
+   1.importExcel，
+      前端导入excel，并进行解析
+   2.uploadFile
+      利用后台返回具体阿里云服务器的信息，
+      再利用前端直接将文件上传至阿里云服务器
+      ps：之前遇到的问题，直接用npm安装ali-oss,一直上传失败
+          公司阿里云服务器不允许put请求，但是ali-oss请求是put，还没有找到办法修改请求
+          后面利用formdata和axios来发送post请求，完成！！
